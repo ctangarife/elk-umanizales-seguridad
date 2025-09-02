@@ -1,0 +1,19 @@
+# Configuración mínima de Logstash 8.11.0
+http.host: "0.0.0.0"
+http.port: 9600
+
+# Configuración de pipeline
+pipeline.workers: 2
+pipeline.batch.size: 500
+pipeline.batch.delay: 50
+
+# Configuración de colas
+queue.type: memory
+
+# Configuración de logs
+log.level: info
+
+# Configuración de paths
+path.data: /usr/share/logstash/data
+path.logs: /usr/share/logstash/logs
+path.config: /usr/share/logstash/pipeline

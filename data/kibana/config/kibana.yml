@@ -1,0 +1,32 @@
+# Configuración mínima de Kibana 8.11.0 para ELK Stack
+server.name: kibana
+server.host: "0.0.0.0"
+server.port: 5601
+
+# Configuración de Elasticsearch
+elasticsearch.hosts: ["http://elk-elasticsearch:9200"]
+elasticsearch.username: ""
+elasticsearch.password: ""
+
+# Configuración de seguridad
+xpack.security.enabled: false
+
+# Configuración de monitoreo
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+xpack.monitoring.ui.container.logstash.enabled: true
+
+# Configuración de logs
+logging.appenders:
+  file:
+    type: file
+    fileName: /usr/share/kibana/logs/kibana.log
+    layout:
+      type: json
+logging.loggers:
+  - name: http.server.response
+    appenders: [file]
+    level: error
+
+# Configuración de telemetría
+telemetry.enabled: false
+telemetry.optIn: false

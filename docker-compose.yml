@@ -1,0 +1,384 @@
+
+services:
+  # Elasticsearch Cluster - 3 nodos para alta disponibilidad
+  elasticsearch-1:
+    build:
+      context: ./build/elasticsearch
+      dockerfile: Dockerfile
+    container_name: elasticsearch-1
+    environment:
+      - NODE_NAME=elasticsearch-1
+      - NODE_ROLES=master,data,ingest
+      - cluster.name=elk-cluster
+      - discovery.seed_hosts=elasticsearch-2:9300,elasticsearch-3:9300
+      - cluster.initial_master_nodes=elasticsearch-1,elasticsearch-2,elasticsearch-3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=90%
+      - cluster.routing.allocation.disk.watermark.high=95%
+      - cluster.routing.allocation.disk.watermark.flood_stage=97%
+      - indices.memory.index_buffer_size=10%
+      - thread_pool.write.size=2
+      - thread_pool.write.queue_size=100
+      - thread_pool.search.size=2
+      - thread_pool.search.queue_size=100
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./data/elasticsearch/setup-templates.sh:/usr/share/elasticsearch/setup-templates.sh:ro
+      - ./bd/elasticsearch-data/node1:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      elk-network:
+        aliases:
+          - elk-elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep \"status\" | grep -q \"green\""]
+      interval: 30s
+      timeout: 15s
+      retries: 60
+      start_period: 120s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  elasticsearch-2:
+    build:
+      context: ./build/elasticsearch
+      dockerfile: Dockerfile
+    container_name: elasticsearch-2
+    environment:
+      - NODE_NAME=elasticsearch-2
+      - NODE_ROLES=master,data,ingest
+      - cluster.name=elk-cluster
+      - discovery.seed_hosts=elasticsearch-1:9300,elasticsearch-3:9300
+      - cluster.initial_master_nodes=elasticsearch-1,elasticsearch-2,elasticsearch-3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=90%
+      - cluster.routing.allocation.disk.watermark.high=95%
+      - cluster.routing.allocation.disk.watermark.flood_stage=97%
+      - indices.memory.index_buffer_size=10%
+      - thread_pool.write.size=2
+      - thread_pool.write.queue_size=100
+      - thread_pool.search.size=2
+      - thread_pool.search.queue_size=100
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./bd/elasticsearch-data/node2:/usr/share/elasticsearch/data
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    networks:
+      elk-network:
+        aliases:
+          - elk-elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep \"status\" | grep -q \"green\""]
+      interval: 30s
+      timeout: 15s
+      retries: 60
+      start_period: 120s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  elasticsearch-3:
+    build:
+      context: ./build/elasticsearch
+      dockerfile: Dockerfile
+    container_name: elasticsearch-3
+    environment:
+      - NODE_NAME=elasticsearch-3
+      - NODE_ROLES=master,data,ingest
+      - cluster.name=elk-cluster
+      - discovery.seed_hosts=elasticsearch-1:9300,elasticsearch-2:9300
+      - cluster.initial_master_nodes=elasticsearch-1,elasticsearch-2,elasticsearch-3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=90%
+      - cluster.routing.allocation.disk.watermark.high=95%
+      - cluster.routing.allocation.disk.watermark.flood_stage=97%
+      - indices.memory.index_buffer_size=10%
+      - thread_pool.write.size=2
+      - thread_pool.search.size=2
+      - thread_pool.search.queue_size=100
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./bd/elasticsearch-data/node3:/usr/share/elasticsearch/data
+    ports:
+      - "9202:9200"
+      - "9302:9300"
+    networks:
+      elk-network:
+        aliases:
+          - elk-elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep \"status\" | grep -q \"green\""]
+      interval: 30s
+      timeout: 15s
+      retries: 60
+      start_period: 120s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Logstash - Procesamiento de logs
+  logstash:
+    build:
+      context: ./build/logstash
+      dockerfile: Dockerfile
+    container_name: logstash
+    environment:
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./data/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./data/simuladores:/usr/share/logstash/logs:ro
+    ports:
+      - "5044:5044"  # Beats input
+      - "5003:5000"  # TCP input para web logs
+      - "5004:5001"  # TCP input para db logs
+      - "5005:5002"  # TCP input para micro logs
+      - "8080:8080"  # HTTP input
+      - "9600:9600"  # Logstash API
+    networks:
+      elk-network:
+        aliases:
+          - elk-logstash
+    depends_on:
+      elasticsearch-1:
+        condition: service_healthy
+      elasticsearch-2:
+        condition: service_healthy
+      elasticsearch-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9600/_node/stats || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+
+  # Kibana - Visualización de datos
+  kibana:
+    build:
+      context: ./build/kibana
+      dockerfile: Dockerfile
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elk-elasticsearch:9200
+      - SERVER_PORT=5601
+      - SERVER_HOST=0.0.0.0
+      - xpack.security.enabled=false
+      - xpack.monitoring.ui.container.elasticsearch.enabled=true
+      - xpack.monitoring.ui.container.logstash.enabled=true
+    volumes:
+      - ./data/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./data/kibana/dashboards:/usr/share/kibana/dashboards:ro
+    ports:
+      - "5601:5601"
+    networks:
+      elk-network:
+        aliases:
+          - elk-kibana
+    depends_on:
+      elasticsearch-1:
+        condition: service_healthy
+      elasticsearch-2:
+        condition: service_healthy
+      elasticsearch-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Simuladores de logs
+  # Simulador de servidores web (50 servidores)
+  web-simulator:
+    build:
+      context: ./build/simuladores/web-servers
+      dockerfile: Dockerfile
+    container_name: web-simulator
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data/simuladores/web-servers/generate_web_logs.py:/app/generate_web_logs.py:ro
+      - ./data/simuladores/web-servers:/app/logs
+    command: ["python3", "/app/generate_web_logs.py"]
+    networks:
+      - elk-network
+    depends_on:
+      logstash:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Simulador de bases de datos (5 bases de datos)
+  db-simulator:
+    build:
+      context: ./build/simuladores/databases
+      dockerfile: Dockerfile
+    container_name: db-simulator
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data/simuladores/databases/generate_db_logs.py:/app/generate_db_logs.py:ro
+      - ./data/simuladores/databases:/app/logs
+    command: ["python3", "/app/generate_db_logs.py"]
+    networks:
+      - elk-network
+    depends_on:
+      logstash:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Simulador de microservicios (10 microservicios)
+  micro-simulator:
+    build:
+      context: ./build/simuladores/microservices
+      dockerfile: Dockerfile
+    container_name: micro-simulator
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data/simuladores/microservices/generate_micro_logs.py:/app/generate_micro_logs.py:ro
+      - ./data/simuladores/microservices:/app/logs
+    command: ["python3", "/app/generate_micro_logs.py"]
+    networks:
+      - elk-network
+    depends_on:
+      logstash:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Bases de datos adicionales
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=elk_demo
+      - MYSQL_USER=elk_user
+      - MYSQL_PASSWORD=elk_password
+    volumes:
+      - ./bd/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      elk-network:
+        aliases:
+          - elk-mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=elk_demo
+      - POSTGRES_USER=elk_user
+      - POSTGRES_PASSWORD=elk_password
+    volumes:
+      - ./bd/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      elk-network:
+        aliases:
+          - elk-postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U elk_user -d elk_demo"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # Servicio de monitoreo del stack ELK
+  elk-monitor:
+    image: curlimages/curl:latest
+    container_name: elk-monitor
+    volumes:
+      - ./data/monitoring/monitor_elk.sh:/monitor_elk.sh:ro
+    networks:
+      - elk-network
+    depends_on:
+      - elasticsearch-1
+      - elasticsearch-2
+      - elasticsearch-3
+      - logstash
+      - kibana
+    command: ["sh", "/monitor_elk.sh"]
+    restart: unless-stopped
+
+# Redes
+networks:
+  elk-network:
+    driver: bridge
+    

@@ -1,0 +1,480 @@
+# ========================================
+# GITIGNORE PARA PROYECTO ELK STACK
+# ========================================
+
+# ========================================
+# DATOS Y LOGS DEL STACK ELK
+# ========================================
+
+# Datos de Elasticsearch (índices, shards, etc.)
+bd/elasticsearch-data/
+data/elasticsearch/data/
+*.cfe
+*.cfs
+*.si
+*.lock
+*.dii
+*.dim
+*.tip
+*.tim
+*.doc
+*.pos
+*.nvd
+*.nvm
+*.fdt
+*.fdx
+*.fnm
+*.frq
+*.tvd
+*.tvx
+*.tvm
+*.tvf
+*.cfs
+*.cfe
+*.si
+*.lock
+
+# Logs del sistema
+*.log
+logs/
+data/*/logs/
+data/simuladores/*/logs/
+data/logstash/logs/
+data/elasticsearch/logs/
+data/kibana/logs/
+
+# Datos de bases de datos
+bd/mysql/
+bd/postgres/
+bd/elasticsearch-data/
+*.sql
+*.sqlite
+*.db
+
+# ========================================
+# CONFIGURACIONES LOCALES Y ENTORNO
+# ========================================
+
+# Variables de entorno
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# Configuraciones locales
+config/local/
+config/dev/
+*.local.yml
+*.local.conf
+*.local.json
+
+# Archivos de configuración del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ========================================
+# DOCKER Y CONTENEDORES
+# ========================================
+
+# Volúmenes de Docker
+docker-volumes/
+volumes/
+data/docker/
+
+# Imágenes y contenedores
+*.tar
+*.tar.gz
+*.tar.bz2
+*.img
+*.iso
+
+# Logs de Docker
+docker-compose.override.yml
+docker-compose.local.yml
+
+# ========================================
+# ARCHIVOS TEMPORALES Y CACHE
+# ========================================
+
+# Archivos temporales del sistema
+tmp/
+temp/
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# Cache de aplicaciones
+.cache/
+cache/
+*.cache
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+
+# ========================================
+# IDEs Y EDITORES
+# ========================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ========================================
+# SISTEMAS OPERATIVOS
+# ========================================
+
+# Windows
+*.lnk
+*.exe
+*.msi
+*.dll
+*.so
+*.dylib
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# LENGUAJES DE PROGRAMACIÓN
+# ========================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.next/
+out/
+.nuxt/
+dist/
+.cache/
+.parcel-cache/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+*.hprof
+target/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ========================================
+# ARCHIVOS DE MONITOREO Y MÉTRICAS
+# ========================================
+
+# Métricas del sistema
+*.metrics
+*.stats
+*.perf
+*.profile
+
+# Archivos de monitoreo
+monitoring/logs/
+monitoring/metrics/
+*.monitoring
+
+# ========================================
+# ARCHIVOS DE SEGURIDAD
+# ========================================
+
+# Certificados y claves
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+
+# Contraseñas y secretos
+secrets/
+.secrets/
+*.secret
+*.key
+*.password
+
+# ========================================
+# ARCHIVOS DE DESARROLLO
+# ========================================
+
+# Archivos de desarrollo local
+dev/
+development/
+test/
+testing/
+staging/
+
+# Archivos de prueba
+test-results/
+coverage/
+.nyc_output/
+
+# ========================================
+# ARCHIVOS ESPECÍFICOS DEL PROYECTO
+# ========================================
+
+# Datos de simuladores
+data/simuladores/*/logs/
+data/simuladores/*/output/
+data/simuladores/*/temp/
+
+# Configuraciones de desarrollo
+data/elasticsearch/config/local/
+data/logstash/config/local/
+data/kibana/config/local/
+
+# Archivos de estado
+*.state
+*.status
+*.pid
+*.sock
+
+# ========================================
+# ARCHIVOS DE BACKUP Y VERSIONES
+# ========================================
+
+# Backups automáticos
+backup/
+backups/
+*.backup
+*.bak
+*.old
+*.orig
+
+# Archivos de versiones
+*.version
+*.ver
+*.rev
+
+# ========================================
+# ARCHIVOS DE DOCUMENTACIÓN TEMPORAL
+# ========================================
+
+# Documentación en progreso
+docs/draft/
+docs/temp/
+*.draft
+*.temp
+
+# Archivos de notas
+notes/
+*.note
+*.todo
+*.fixme
+
+# ========================================
+# ARCHIVOS DE COMUNICACIÓN
+# ========================================
+
+# Archivos de chat y comunicación
+*.chat
+*.message
+*.mail
+*.email
+
+# ========================================
+# ARCHIVOS DE COMPRESIÓN
+# ========================================
+
+# Archivos comprimidos
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+*.gz
+*.bz2
+
+# ========================================
+# ARCHIVOS DE MEDIA
+# ========================================
+
+# Imágenes y videos
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+
+# ========================================
+# ARCHIVOS DE OFICINA
+# ========================================
+
+# Documentos de Office
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.pdf
+*.odt
+*.ods
+*.odp
+
+# ========================================
+# ARCHIVOS DE PROYECTO ESPECÍFICOS
+# ========================================
+
+
+# Archivos de datos de prueba
+test-data/
+sample-data/
+demo-data/
+
+# Archivos de configuración de desarrollo
+dev-config/
+local-config/
+test-config/
+
+# ========================================
+# NOTAS IMPORTANTES
+# ========================================
+
+# IMPORTANTE: Los siguientes archivos SÍ deben estar en el repositorio:
+# - docker-compose.yml
+# - README.md
+# - INSTRUCCIONES.md
+# - env.example
+# - data/*/config/*.yml (configuraciones base)
+# - data/simuladores/*/generate_*.py (scripts de simuladores)
+# - build/*/Dockerfile (Dockerfiles)
+# - data/monitoring/monitor_elk.sh (script de monitoreo)
+
+# Los siguientes archivos NO deben estar en el repositorio:
+# - .env (contiene contraseñas)
+# - bd/ (contiene datos reales)
+# - logs/ (contiene logs del sistema)
+# - configuraciones locales
+# - archivos temporales
+# - datos de desarrollo
